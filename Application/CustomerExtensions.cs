@@ -35,4 +35,39 @@ public static class CustomerExtensions
 
         list.Insert(index, customerToAdd);
     }
+
+    public static List<Customer> SortCustomers(this List<Customer> array, int leftIndex, int rightIndex)
+    {
+        var i = leftIndex;
+        var j = rightIndex;
+        var pivot = array[leftIndex];
+        while (i <= j)
+        {
+            while (array[i].CompareNames(pivot) < 0)
+            {
+                i++;
+            }
+
+            while (array[j].CompareNames(pivot) > 0)
+            {
+                j--;
+            }
+
+            if (i <= j)
+            {
+                Customer temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+                i++;
+                j--;
+            }
+        }
+
+        if (leftIndex < j)
+            array.SortCustomers(leftIndex, j);
+        if (i < rightIndex)
+            array.SortCustomers(i, rightIndex);
+
+        return array;
+    }
 }

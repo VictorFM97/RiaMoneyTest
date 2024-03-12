@@ -13,10 +13,10 @@ public class CustomerRepository : ICustomerRepository
         _context = customerContext;
     }
 
-    public async Task Add(Customer customer)
+    public void Add(Customer customer)
     {
         _context.Customers.Add(customer);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
     }
 
     public async Task<List<Customer>> GetAllAsync()

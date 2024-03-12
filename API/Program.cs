@@ -35,12 +35,12 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<CustomerContext>();
 
-    //var migrations = db.Database.GetPendingMigrations();
+    var migrations = db.Database.GetPendingMigrations();
 
-    //if (migrations.Any())
-    //{
-    //    db.Database.Migrate();
-    //}
+    if (migrations.Any())
+    {
+        db.Database.Migrate();
+    }
 }
 
 app.UseHttpsRedirection();

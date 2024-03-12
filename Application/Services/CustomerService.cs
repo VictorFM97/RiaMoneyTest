@@ -12,7 +12,8 @@ public class CustomerService : ICustomerService
     public CustomerService(ICustomerRepository context)
     {
         _customerRepository = context;
-        _customers = new List<Customer>();//_customerRepository.GetAllAsync().Result;
+        _customers = _customerRepository.GetAllAsync().Result;
+        _customers.SortCustomers(0, _customers.Count - 1);
     }
 
     public List<Customer> GetAllCustomers()
@@ -35,13 +36,13 @@ public class CustomerService : ICustomerService
         {
             var customerErrors = customer.Validate(_customers.Select(x => x.Id).ToArray());
 
-            if(customerErrors.Any() || errors.Any())
+            if(customerErrors.Any())
             {
                 errors.AddRange(customerErrors);
                 continue;
             }
 
-            //_customerRepository.Add(customer);
+            _customerRepository.Add(customer);
             _customers.InsertionSort(customer);
         }
 

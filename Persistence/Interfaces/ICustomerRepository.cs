@@ -6,5 +6,5 @@ public interface ICustomerRepository
 {
     Task<List<Customer>> GetAllAsync();
 
-    Task Add(Customer customer);
+    void Add(Customer customer);
 }
