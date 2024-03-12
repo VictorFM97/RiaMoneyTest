@@ -11,6 +11,11 @@ services:
     build:
       context: .
       dockerfile: Simulator/Dockerfile
+  denomination-routine:
+    image: ${DOCKER_REGISTRY-}denominationroutine
+    build:
+      context: .
+      dockerfile: DenominationRoutine/Dockerfile
   sql-server:
     image: "mcr.microsoft.com/mssql/server"
     container_name: sql-server
