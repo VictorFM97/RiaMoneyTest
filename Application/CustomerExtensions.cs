@@ -4,7 +4,7 @@ namespace Application;
 
 public static class CustomerExtensions
 {
-    public static void InsertAtCorrectPosition(this List<Customer> list, Customer customerToAdd)
+    public static void InsertionSort(this List<Customer> list, Customer customerToAdd)
     {
         int index = 0;
 

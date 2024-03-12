@@ -5,5 +5,5 @@ namespace Application.Interfaces;
 public interface ICustomerService
 {
     List<Customer> GetAllCustomers();
-    Task InsertCustomers(List<Customer> customers);
+    List<string> InsertCustomers(List<Customer> customers);
 }

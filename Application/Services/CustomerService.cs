@@ -20,24 +20,31 @@ public class CustomerService : ICustomerService
         return _customers;
     }
 
-    public Task InsertCustomers(List<Customer> customers)
+    public List<string> InsertCustomers(List<Customer> customers)
     {
         var errors = new List<string>();
+
+        var requestHasDuplicateIds = customers.DistinctBy(x => x.Id).Count() != customers.Count;
+
+        if (requestHasDuplicateIds)
+        {
+            errors.Add("Request contain duplicate ids");
+        }
 
         foreach(var customer in customers)
         {
             var customerErrors = customer.Validate(_customers.Select(x => x.Id).ToArray());
 
-            if(customerErrors.Any())
+            if(customerErrors.Any() || errors.Any())
             {
                 errors.AddRange(customerErrors);
                 continue;
             }
 
             //_customerRepository.Add(customer);
-            _customers.InsertAtCorrectPosition(customer);
+            _customers.InsertionSort(customer);
         }
 
-        return Task.CompletedTask;
+        return errors;
     }
 }

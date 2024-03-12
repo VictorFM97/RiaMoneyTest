@@ -16,15 +16,21 @@ public class CustomersController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult> Get()
+    public ActionResult Get()
     {
         return Ok(_customerService.GetAllCustomers());
     }
 
     [HttpPost]
-    public async Task<ActionResult> Create(List<Customer> customers)
+    public ActionResult Create(List<Customer> customers)
     {
-        await _customerService.InsertCustomers(customers);
+        var errors = _customerService.InsertCustomers(customers);
+
+        if (errors.Any())
+        {
+            return UnprocessableEntity(errors);
+        }
+
         return Created();
     }
 }
