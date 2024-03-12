@@ -13,17 +13,12 @@ public class GlobalRequestHandlingMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        Stopwatch sw = new Stopwatch();
-        sw.Start();
-
         try
         {
             var queries = "";
 
             _logger.LogInformation(
                 $"Starting request {context.Request.Path}, method {context.Request.Method} {queries}");
-
-            
 
             await next(context);
 
@@ -45,9 +40,5 @@ public class GlobalRequestHandlingMiddleware : IMiddleware
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
-
-        sw.Stop();
-
-        _logger.LogInformation($"Elapsed time: {sw.Elapsed}");
     }
 }
