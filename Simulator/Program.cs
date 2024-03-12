@@ -18,13 +18,16 @@ internal class Program
         "Powell", "Larsen", "Chan", "Anderson", "Lane"
     };
 
-    private static Uri ApiUri = new Uri("http://host.docker.internal:13456");
+    private static Uri ApiUri = new Uri("http://host.docker.internal:45600");
 
     private static async Task Main(string[] args)
     {
         int amount = new Random().Next(10, 40);
 
         var addTask = AddCustomers(amount);
+
+        // Adding small delay so it prints some customers
+        await Task.Delay(300);
         var getTask = GetCustomers(amount);
 
         await Task.WhenAll(addTask, getTask);

@@ -1,29 +1,25 @@
-﻿using Application.Interfaces;
+﻿using Application.Extensions;
+using Application.Interfaces;
+using Application.ValueHolder;
 using Domain.Customers;
 using Persistence.Interfaces;
-using System.Collections.Generic;
 
 namespace Application.Services;
 
 public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
-    private static readonly List<Customer> _customers;
 
     public CustomerService(ICustomerRepository context)
     {
         _customerRepository = context;
-    }
-
-    static CustomerService()
-    {
-        _customers = _customerRepository.GetAllAsync().Result;
-        _customers.SortCustomers(0, _customers.Count - 1);
+        CustomerHolder.Customers = _customerRepository.GetAllAsync().Result;
+        CustomerHolder.Customers.SortCustomers(0, CustomerHolder.Customers.Count - 1);
     }
 
     public List<Customer> GetAllCustomers()
     {
-        return _customers;
+        return CustomerHolder.Customers;
     }
 
     public List<string> InsertCustomers(List<Customer> customers)
@@ -37,7 +33,7 @@ public class CustomerService : ICustomerService
             errors.Add("Request contain duplicate ids");
         }
 
-        var existingIds = _customers.Select(x => x.Id).ToArray();
+        var existingIds = CustomerHolder.Customers.Select(x => x.Id).ToArray();
         errors.AddRange(customers.SelectMany(x => x.Validate(existingIds)));
 
         if (!errors.Any())
@@ -45,7 +41,7 @@ public class CustomerService : ICustomerService
             foreach (var customer in customers)
             {
                 _customerRepository.Add(customer);
-                _customers.InsertionSort(customer);
+                CustomerHolder.Customers.InsertionSort(customer);
             }
         }
 

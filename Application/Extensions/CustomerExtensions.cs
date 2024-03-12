@@ -1,6 +1,6 @@
 ﻿using Domain.Customers;
 
-namespace Application;
+namespace Application.Extensions;
 
 public static class CustomerExtensions
 {
@@ -38,7 +38,7 @@ public static class CustomerExtensions
 
     public static void SortCustomers(this List<Customer> array, int leftIndex, int rightIndex)
     {
-        if(array.Count == 0)
+        if (array.Count == 0)
         {
             return;
         }

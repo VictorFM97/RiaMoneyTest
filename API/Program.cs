@@ -1,3 +1,4 @@
+using API.Middleware;
 using Application.Interfaces;
 using Application.Services;
 using Microsoft.EntityFrameworkCore;
@@ -7,20 +8,21 @@ using Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<ICustomerService, CustomerService>();
-builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<GlobalRequestHandlingMiddleware>();
 
 builder.Services.AddDbContext<CustomerContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("sql");
     options.UseSqlServer(connectionString);
-}, ServiceLifetime.Singleton);
+});
 
 var app = builder.Build();
 
@@ -42,6 +44,8 @@ using (var scope = app.Services.CreateScope())
         db.Database.Migrate();
     }
 }
+
+app.UseMiddleware<GlobalRequestHandlingMiddleware>();
 
 app.UseAuthorization();
 
