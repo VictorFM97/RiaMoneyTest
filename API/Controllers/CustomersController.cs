@@ -31,6 +31,6 @@ public class CustomersController : ControllerBase
             return UnprocessableEntity(errors);
         }
 
-        return Created();
+        return Ok();
     }
 }

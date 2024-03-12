@@ -6,6 +6,11 @@ services:
     build:
       context: .
       dockerfile: API/Dockerfile
+  simulator:
+    image: ${DOCKER_REGISTRY-}simulator
+    build:
+      context: .
+      dockerfile: Simulator/Dockerfile
   sql-server:
     image: "mcr.microsoft.com/mssql/server"
     container_name: sql-server

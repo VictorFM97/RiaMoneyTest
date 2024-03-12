@@ -1,17 +1,22 @@
 ﻿using Application.Interfaces;
 using Domain.Customers;
 using Persistence.Interfaces;
+using System.Collections.Generic;
 
 namespace Application.Services;
 
 public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly List<Customer> _customers;
+    private static readonly List<Customer> _customers;
 
     public CustomerService(ICustomerRepository context)
     {
         _customerRepository = context;
+    }
+
+    static CustomerService()
+    {
         _customers = _customerRepository.GetAllAsync().Result;
         _customers.SortCustomers(0, _customers.Count - 1);
     }
@@ -32,18 +37,16 @@ public class CustomerService : ICustomerService
             errors.Add("Request contain duplicate ids");
         }
 
-        foreach(var customer in customers)
+        var existingIds = _customers.Select(x => x.Id).ToArray();
+        errors.AddRange(customers.SelectMany(x => x.Validate(existingIds)));
+
+        if (!errors.Any())
         {
-            var customerErrors = customer.Validate(_customers.Select(x => x.Id).ToArray());
-
-            if(customerErrors.Any())
+            foreach (var customer in customers)
             {
-                errors.AddRange(customerErrors);
-                continue;
+                _customerRepository.Add(customer);
+                _customers.InsertionSort(customer);
             }
-
-            _customerRepository.Add(customer);
-            _customers.InsertionSort(customer);
         }
 
         return errors;

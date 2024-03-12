@@ -36,8 +36,13 @@ public static class CustomerExtensions
         list.Insert(index, customerToAdd);
     }
 
-    public static List<Customer> SortCustomers(this List<Customer> array, int leftIndex, int rightIndex)
+    public static void SortCustomers(this List<Customer> array, int leftIndex, int rightIndex)
     {
+        if(array.Count == 0)
+        {
+            return;
+        }
+
         var i = leftIndex;
         var j = rightIndex;
         var pivot = array[leftIndex];
@@ -67,7 +72,5 @@ public static class CustomerExtensions
             array.SortCustomers(leftIndex, j);
         if (i < rightIndex)
             array.SortCustomers(i, rightIndex);
-
-        return array;
     }
 }
