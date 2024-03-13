@@ -1,5 +1,4 @@
 ﻿using Domain.Customers;
-using Microsoft.EntityFrameworkCore;
 using Persistence.Interfaces;
 
 namespace Persistence.Repositories;
@@ -19,8 +18,8 @@ public class CustomerRepository : ICustomerRepository
         _context.SaveChanges();
     }
 
-    public async Task<List<Customer>> GetAllAsync()
+    public List<Customer> GetAll()
     {
-        return await _context.Customers.ToListAsync();
+        return _context.Customers.AsQueryable().ToList();
     }
 }

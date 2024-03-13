@@ -23,7 +23,8 @@ public class Customer
         {
             errors.Add($"Id cannot be 0 or negative, Id: {Id}");
         }
-        else if (existingIds.Contains(Id))
+        
+        if (existingIds.Contains(Id))
         {
             errors.Add($"Id already exists, Id: {Id}");
         }

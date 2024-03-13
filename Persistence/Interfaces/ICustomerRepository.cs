@@ -4,7 +4,7 @@ namespace Persistence.Interfaces;
 
 public interface ICustomerRepository
 {
-    Task<List<Customer>> GetAllAsync();
+    List<Customer> GetAll();
 
     void Add(Customer customer);
 }

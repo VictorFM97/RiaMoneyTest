@@ -15,10 +15,8 @@ public class GlobalRequestHandlingMiddleware : IMiddleware
     {
         try
         {
-            var queries = "";
-
             _logger.LogInformation(
-                $"Starting request {context.Request.Path}, method {context.Request.Method} {queries}");
+                $"Starting request {context.Request.Path}, method {context.Request.Method}");
 
             await next(context);
 

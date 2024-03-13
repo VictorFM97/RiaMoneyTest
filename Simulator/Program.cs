@@ -20,17 +20,22 @@ internal class Program
 
     private static Uri ApiUri = new Uri("http://host.docker.internal:45600");
 
+    private static List<Customer> customers;
+
     private static async Task Main(string[] args)
     {
         int amount = new Random().Next(10, 40);
 
+        await Task.Delay(1000);
         var addTask = AddCustomers(amount);
 
-        // Adding small delay so it prints some customers
         await Task.Delay(300);
         var getTask = GetCustomers(amount);
 
         await Task.WhenAll(addTask, getTask);
+
+        Console.WriteLine("Last customers array:");
+        PrintCustomers();
 
         Console.WriteLine("Finished processing.");
     }
@@ -98,15 +103,18 @@ internal class Program
         for (int i = 0; i < amount; i++) 
         {
             var response = await client.GetAsync("/customers");
-            var customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
-
-            foreach(var customer in customers!)
-            {
-                Console.WriteLine(
-                    $"Id: {customer.Id}, First Name: {customer.FirstName}, Last Name: {customer.LastName}, Age: {customer.Age}");
-            }
+            customers = await response.Content.ReadFromJsonAsync<List<Customer>>();
         }
 
         Console.WriteLine("------------------------------------------");
+    }
+
+    private static void PrintCustomers()
+    {
+        foreach (var customer in customers)
+        {
+            Console.WriteLine(
+                $"Id: {customer.Id}, First Name: {customer.FirstName}, Last Name: {customer.LastName}, Age: {customer.Age}");
+        }
     }
 }
