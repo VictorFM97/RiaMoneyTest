@@ -1,5 +1,6 @@
 ﻿using Application.Extensions;
 using Application.Services;
+using Application.ValueHolder;
 using Domain.Customers;
 using Persistence.Interfaces;
 
@@ -39,6 +40,15 @@ public class CustomerServiceTests
 
         var resultCustomers = _service.GetAllCustomers();
         resultCustomers.Should().BeEquivalentTo(expectedCustomers);
+    }
+
+    [Fact]
+    public void Constructor_ShouldNotRetrieveCustomersIfListAlreadyExists()
+    {
+        CustomerHolder.Customers = new List<Customer>();
+
+        _service = new CustomerService(_customerRepository.Object);
+        _customerRepository.Verify(x => x.GetAll(), Times.Never);
     }
 
     [Fact]

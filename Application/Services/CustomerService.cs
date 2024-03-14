@@ -13,8 +13,12 @@ public class CustomerService : ICustomerService
     public CustomerService(ICustomerRepository context)
     {
         _customerRepository = context;
-        CustomerHolder.Customers = _customerRepository.GetAll();
-        CustomerHolder.Customers.SortCustomers(0, CustomerHolder.Customers.Count - 1);
+
+        if (CustomerHolder.Customers == null)
+        {
+            CustomerHolder.Customers = _customerRepository.GetAll();
+            CustomerHolder.Customers.SortCustomers(0, CustomerHolder.Customers.Count - 1);
+        }
     }
 
     public List<Customer> GetAllCustomers()
